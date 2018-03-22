@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Wallet } from 'ethers';
 import hex2a from '../utils/hexToAscii';
+import QRScanner from '../QRScanner/QRScanner'
 
 import {Card, CardTitle, CardText} from 'material-ui/Card';
 import Paper from 'material-ui/Paper';
@@ -36,6 +37,9 @@ const styles = {
     marginLeft: '-2vw'
   },
   divider: {
+    margin: '2em'
+  },
+  error: {
     margin: '2em'
   }
 }
@@ -73,10 +77,30 @@ class TransactionCard extends Component {
   handleChange = (event) => {
     const currNickName = event.target.value
     this.setState({currNickName})
-  };
+  }
+
+  setEthEncodedEthTran = (encodedEthTran) => {
+    this.setState({encodedEthTran})
+  }
 
   render() {
-    const tran = Wallet.parseTransaction(this.state.encodedEthTran);
+    let tran
+
+    try {
+      tran = Wallet.parseTransaction(this.state.encodedEthTran);
+    }
+    catch(error) {
+      return (
+        <div style={styles.center}>
+          <Paper style={styles.error} zDepth={5}>
+            <CardText>That Doesn't Look Like an Ethereum Transaction!</CardText>
+          </Paper>
+          <div align='center'>
+            <QRScanner setEthEncodedEthTran={this.setEthEncodedEthTran}/>
+          </div>
+        </div>
+      )
+    }
 
     const actions = [
       <FlatButton
@@ -111,11 +135,11 @@ class TransactionCard extends Component {
             </CardText>
 
             <CardText>
-              <span style={styles.span}>Value:</span>{tran.value.toNumber()}
+              <span style={styles.span}>Value:</span>{tran.value.toNumber()} wei
               <br />
-              <span style={styles.span}>Gas Limit:</span>{tran.gasLimit.toNumber()}
+              <span style={styles.span}>Gas Limit:</span>{tran.gasLimit.toNumber()} wei
               <br />
-              <span style={styles.span}>Gas Price:</span>{tran.gasPrice.toNumber()}
+              <span style={styles.span}>Gas Price:</span>{tran.gasPrice.toNumber()} wei
             </CardText>
 
             <CardText>
@@ -154,6 +178,10 @@ class TransactionCard extends Component {
               onKeyPress={this.catchReturn}
             />
         </Dialog>
+
+        <div align='center'>
+          <QRScanner setEthEncodedEthTran={this.setEthEncodedEthTran}/>
+        </div>
       </div>
     )
   }

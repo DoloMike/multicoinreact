@@ -60,6 +60,7 @@ class LoginForm extends Component {
                         autoFocus
                         name="Password"
                         floatingLabelText='Password'
+                        type='password'
                         onChange={this.handleChange}
                         value={this.state.currentPassword}
                         errorText={this.state.errorText}

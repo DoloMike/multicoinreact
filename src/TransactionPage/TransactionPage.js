@@ -35,12 +35,12 @@ class TransactionPage extends Component {
   }
 
   render() {
-    let renderComponent = null;
+    let transactionHolder = null;
 
     if (this.state.loading) {
-      renderComponent = <Loading />
+      transactionHolder = <Loading />
     } else {
-      renderComponent = <TransactionCard encodedEthTran={this.state.encodedEthTran} />
+      transactionHolder = <div><TransactionCard encodedEthTran={this.state.encodedEthTran} /></div>
     }
 
     if (this.state.redirect) {
@@ -48,7 +48,7 @@ class TransactionPage extends Component {
     } else {
       return (
         <div align="center">
-          {renderComponent}
+          {transactionHolder}
         </div>
       )
     }
