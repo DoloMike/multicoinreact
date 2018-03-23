@@ -12,10 +12,17 @@ class TransactionPage extends Component {
   }
 
   componentDidMount() {
-    const jwt = this.props.location.state.jwt
-    this.apiGetEthTran(jwt)
+    try {
+      const jwt = this.props.location.state.jwt
+      this.apiGetEthTran(jwt)
+    } catch(e) {
+      this.setState({
+        loading: false,
+        redirect: true,
+      })
+    }
   }
-
+  
   apiGetEthTran = (jwt) => {
     getEncodedEthTran(jwt)
       .then(res => {
